@@ -1,0 +1,85 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+#topsection{
+background: url('images/blue-bg.jpg');
+height: 60px; /*Height of top section*/
+color: white;
+font-family: sans-serif;
+font-size: 32px;
+
+}
+
+#contentwrapper{
+float: left;
+width: 100%;
+background: white;
+}
+
+#contentcolumn{
+margin-left: 200px; /*Set left margin to LeftColumnWidth*/
+}
+
+#leftcolumn{
+float: left;
+width: 200px; /*Width of left column*/
+margin-left: -100%;
+background: #C8FC98;
+}
+
+#footer{
+clear: left;
+width: 100%;
+background: black;
+color: #FFF;
+text-align: center;
+padding: 4px 0;
+}
+
+#footer a{
+color: #FFFF80;
+}
+
+.innertube{
+margin: 10px; /*Margins for inner DIV inside each column (to provide padding)*/
+margin-top: 0;
+}
+
+#navigation > h2 {
+  display: none;
+}
+
+#navigation ul {
+  list-style-type: none;
+  padding: 10px;
+}
+
+#navigation ul > li {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+#content {
+  padding: 0;
+  padding-left: 253px;
+}
+
+#content > div {
+  padding: 10px;
+  background: white;
+  min-height: 100%;
+}
+
+#content > div > h1 {
+  margin-top: 0;
+}
+
+.text-only {
+  display: none;
+}
