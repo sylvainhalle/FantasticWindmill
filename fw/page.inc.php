@@ -6,7 +6,7 @@
     A simple static web site generator for PHP programmers.
     
     Author:  Sylvain Hallé
-    Date:    2013-01-23
+    Date:    2013-01-26
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -115,7 +115,7 @@ class Page
         $yaml_contents = file_get_contents($cur_filename);
         if ($parsed_yaml = yaml_parse($yaml_contents))
         {
-          $out_yaml = array_merge($parsed_yaml, $out_yaml);
+          $out_yaml = array_merge($out_yaml, $parsed_yaml);
         }
         else
           show_error("WARNING: Error parsing YAML in $cur_filename");
@@ -123,7 +123,7 @@ class Page
       }
       $cur_dir .= $dir."/";
     }
-    $this->mergeYaml($out_yaml);
+    $this->mergeYaml($out_yaml);    
   }
 }
 

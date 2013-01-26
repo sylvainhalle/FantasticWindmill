@@ -6,7 +6,7 @@
     A simple static web site generator for PHP programmers.
     
     Author:  Sylvain Hallé
-    Date:    2013-01-23
+    Date:    2013-01-26
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 **************************************************************************/
 
 // Version string (used for version tracking)
-define("VERSION_STRING", "1.0");
+define("VERSION_STRING", "1.01");
 $HELLO_MSG = "Fantastic Windmill v".
   VERSION_STRING." - A static web site generator for PHP programmers\n".
   "(C) 2013 Sylvain Hallé, Université du Québec à Chicoutimi";

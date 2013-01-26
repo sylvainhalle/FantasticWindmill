@@ -87,7 +87,7 @@ mirror:
 clean:
 	find $(OUTPUTDIR) -mindepth 1 -delete
 
-publish: template_remote $(OUTPUTDIR)/index.html
+publish: template_remote
 	$(FW) $(FWOPTS)
 
 ssh_upload: 
