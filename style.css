@@ -3,3 +3,67 @@ pre {
   border: solid 1px grey;
   padding: 10pt;
 }
+
+/* This part "stolen" from the Clamwin site */
+.download-box {
+font-size: 0.7em;
+font-family : Arial;
+text-align: center;
+margin-right: 0.8em;
+width: 249px;
+margin-bottom: 0em;
+margin-top: 0em
+}
+.download-box a {
+font-weight: normal;
+color: rgb(64, 69, 72);
+}
+.download-box a:hover {
+color: #b31616;
+}
+a.download-link {
+display: block;
+padding: 13px 0 0 0;
+margin-bottom: 0.1em;
+text-decoration: none;
+color: #eeeeee;
+width: 249px;
+background: url("download.png") 0 0 no-repeat;
+text-align: left;
+line-height: 130%;
+}
+a.download-link span {
+display: block;
+min-height: 33px;
+padding: 0 10px 5px 15px;
+} * html a.download-link span { height: 33px; }
+
+a.download-link span {
+background: url("download.png") 0 100% no-repeat;
+}
+a.download-link strong {
+font-size: 1.6em;
+text-decoration: none;
+font-weight: bold;
+color: #eeeeee;
+}
+a.download-link em {
+font-style: normal;
+font-weight: normal;
+color: #eeeeee;
+letter-spacing: 0;
+display: block;
+padding-top: 3px;
+padding-bottom: 6px;
+font-size: 1em;
+}
+a.download-link:hover, a.download-link:hover span, a.download-link:hover strong, a.download-link:hover em {
+color: white;
+cursor: pointer; /* need for IE6 */
+background-position: 100% 0;
+color: #c91222;
+}
+a.download-link:hover span {
+background-position: 100% 100%;
+}
+
