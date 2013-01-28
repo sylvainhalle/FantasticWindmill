@@ -124,7 +124,8 @@ $file_list = scandir_recursive($rendering->getContentDir());
 foreach ($file_list as $file)
 {
   // Is it a Markdown file?
-  if (!(substr($file, strlen($file) - 2, 2) == "md"))
+  $ext = pathinfo($file, PATHINFO_EXTENSION);
+  if ($ext != "md" && $ext != "rst")
     continue;
   spitln("Processing $file", 1);
   $page = new Page();
@@ -143,7 +144,7 @@ foreach ($file_list as $file)
   
   
   // Read a YAML file with same name as page to process (if exists)
-  $yaml_filename = substr($file, 0, strlen($file) -2)."yaml";
+  $yaml_filename = substr($file, 0, strlen($file) - strlen($ext))."yaml";
   if (file_exists($yaml_filename) && $rendering->getYaml())
   {
     $yaml_contents = file_get_contents($yaml_filename);
@@ -167,7 +168,14 @@ foreach ($file_list as $file)
   }
   
   // Get basic metadata from file contents
-  $html_contents = Markdown($contents);
+  if ($ext == "md")
+    $html_contents = Markdown($contents);
+  else {
+    $tmp_rst_file = "tmp_rst_file.rst";
+    file_put_contents($tmp_rst_file, $contents);
+    $html_contents = shell_exec("rst2html.py $tmp_rst_file");
+    unlink("tmp_rst_file.rst");
+  }
   @$page->parse($html_contents);
   $nodelist = $page->dom->getElementsByTagName("h1");
   $heading1 = $nodelist->item(0);
@@ -188,7 +196,7 @@ foreach ($file_list as $file)
   $base_path = substr($file, strlen($rendering->getContentDir()), 
     strlen($file) - strlen($rendering->getContentDir()));
   // Target filename is html instead of md
-  $base_path = substr($base_path, 0, strlen($base_path) - 2)."html";
+  $base_path = substr($base_path, 0, strlen($base_path) - strlen($ext))."html";
   $output_filename = $rendering->getOutputDir().$base_path;
   $page->setOutputFilename($output_filename);
   
