@@ -129,6 +129,7 @@ foreach ($file_list as $file)
     continue;
   spitln("Processing $file", 1);
   $page = new Page();
+  $page->addIncludedFile($file);
   $contents = file_get_contents($file);
   
   // Recursively read _.yaml in all directories from the root of the
