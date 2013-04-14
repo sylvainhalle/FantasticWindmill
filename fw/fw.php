@@ -23,7 +23,7 @@
 **************************************************************************/
 
 // Version string (used for version tracking)
-define("VERSION_STRING", "1.01");
+define("VERSION_STRING", "1.02");
 $HELLO_MSG = "Fantastic Windmill v".
   VERSION_STRING." - A static web site generator for PHP programmers\n".
   "(C) 2013 Sylvain Hallé, Université du Québec à Chicoutimi";
@@ -252,7 +252,8 @@ if ($fw_params["clean-urls"] == true)
 foreach ($pages as $page)
 {
   $output_filename = $page->getOutputFilename();
-  if ($fw_params["incremental"] == true && !$page->mustRegenerate())
+  $regenerate = $page->mustRegenerate();
+  if ($fw_params["incremental"] == true && $regenerate === Page::$DONT_REGENERATE)
   {
     // Don't save files that have not been modified. This will keep
     // the target file's current timestamp and allow tools like lftp and
@@ -260,7 +261,14 @@ foreach ($pages as $page)
     spitln("Skip writing to $output_filename: page not modified", 1);
     continue;
   }
-  spitln("Writing to $output_filename", 1);
+  else
+  {
+    spit("Writing to $output_filename:", 1);
+    if ($regenerate === Page::$FILE_MODIFIED)
+      spitln(" input file more recent than target file", 1);
+    else
+      spitln(" target file does not exist", 1);
+  }
   make_path($output_filename, true);
   // TODO: this is a hack. For some reason, the DOM Document writes the
   // xmlns header twice; this removes the HTML validation error.

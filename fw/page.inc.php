@@ -29,6 +29,13 @@ class Page
   public $data = array();
   private $m_included_files = array();
   
+  /**
+   * Return codes for method mustRegenerate
+   */
+  public static $DONT_REGENERATE = 0;
+  public static $FILE_DOES_NOT_EXIST = 1;
+  public static $FILE_MODIFIED = 2;
+  
   public function parse($html)
   {
     $html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
@@ -86,15 +93,19 @@ class Page
   {
     // If target file does not exist, obviously we must regenerate the page
     if (!file_exists($this->m_outputFilename))
-      return true;
+    {
+      return Page::$FILE_DOES_NOT_EXIST;
+    }
     $target_time = filemtime($this->m_outputFilename);
     foreach ($this->m_included_files as $filename)
     {
       $source_time = filemtime($filename);
       if ($source_time > $target_time)
-        return true;
+      {
+        return Page::$FILE_MODIFIED;
+      }
     }
-    return false;
+    return Page::$DONT_REGENERATE;
   }
   
   function recurseYaml($start_dir, $end_dir, $filename)
