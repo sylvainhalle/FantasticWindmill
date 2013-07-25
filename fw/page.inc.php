@@ -46,7 +46,7 @@ class Page
   
   public function getHtmlContents()
   {
-    return $this->dom->saveXML();
+    return $this->dom->saveHTML();
   }
   
   public function getUrl($from = "")

@@ -23,7 +23,7 @@
 **************************************************************************/
 
 // Version string (used for version tracking)
-define("VERSION_STRING", "1.02");
+define("VERSION_STRING", "1.0.3");
 $HELLO_MSG = "Fantastic Windmill v".
   VERSION_STRING." - A static web site generator for PHP programmers\n".
   "(C) 2013 Sylvain Hallé, Université du Québec à Chicoutimi";
@@ -273,7 +273,7 @@ foreach ($pages as $page)
   make_path($output_filename, true);
   // TODO: this is a hack. For some reason, the DOM Document writes the
   // xmlns header twice; this removes the HTML validation error.
-  $contents = $page->dom->saveXML();
+  $contents = $page->dom->saveHTML();
   $contents = str_replace("xmlns=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.w3.org/1999/xhtml\"", "xmlns=\"http://www.w3.org/1999/xhtml\"", $contents);
   
   // TODO: another hack. DOMDocument puts all JavaScript inside a CDATA
