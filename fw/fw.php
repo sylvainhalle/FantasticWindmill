@@ -278,7 +278,7 @@ foreach ($pages as $page)
   
   // TODO: another hack. DOMDocument puts all JavaScript inside a CDATA
   // that deactivates it. We manually remove the CDATA from the final page.
-  $contents = preg_replace("/<script type=\"text\/javascript\"><!\[CDATA\[(.*?)\]\]><\/script>/ms", "<script type=\"text/javascript\">$1</script>", $contents);
+  $contents = preg_replace("/<script ([^>]*?)>[\n\s]*?<!\[CDATA\[(.*?)\]\]>[\n\s]*?<\/script>/ms", "<script $1>$2</script>", $contents);
   file_put_contents($output_filename, $contents);
 }
 
