@@ -174,7 +174,7 @@ foreach ($file_list as $file)
   else {
     $tmp_rst_file = "tmp_rst_file.rst";
     file_put_contents($tmp_rst_file, $contents);
-    $html_contents = shell_exec("rst2html.py $tmp_rst_file");
+    $html_contents = shell_exec("rst2html.py --syntax-highlight=short $tmp_rst_file");
     unlink("tmp_rst_file.rst");
   }
   @$page->parse($html_contents);
