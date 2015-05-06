@@ -28,6 +28,7 @@ class Page
   private $m_outputFilename = "";
   public $data = array();
   private $m_included_files = array();
+  public $is_html5 = true;
   
   /**
    * Return codes for method mustRegenerate
@@ -39,9 +40,16 @@ class Page
   public function parse($html)
   {
     $html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
-    $this->dom = new DOMDocument('1.0', 'UTF-8');
+    //if ($this->is_html5 === true)
+    {
+      $this->dom = HTML5_Parser::parse($html);
+    }
+    /*else
+    {
+      $this->dom = new DOMDocument('1.0', 'UTF-8');
+      $this->dom->loadHTML($html);
+    }*/
     $this->dom->formatOutput = true;
-    $this->dom->loadHTML($html);
   }
   
   public function getHtmlContents()
