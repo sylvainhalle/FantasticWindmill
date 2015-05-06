@@ -238,6 +238,8 @@ foreach ($pages as $page)
   rebase_urls($nodelist, "src", $rendering, $page);
   $nodelist = $page->dom->getElementsByTagName("link");
   rebase_urls($nodelist, "href", $rendering, $page);
+  $nodelist = $page->dom->getElementsByTagName("script");
+  rebase_urls($nodelist, "src", $rendering, $page);
 }
 
 // Third pass: clean URLs
