@@ -47,6 +47,7 @@ require_once("fw/rendering.inc.php");
 require_once("fw/site.inc.php");
 require_once("fw/page.inc.php");
 require_once("fw/utils.php");
+require_once("fw/html5lib/Parser.php");
 
 // Option defaults {{{
 $fw_params = array();
@@ -227,6 +228,7 @@ foreach ($pages as $page)
   $page_included_files = get_included_files();
   $page_included_files = array_diff($page_included_files, $base_included_files);
   $page->addIncludedFiles($page_included_files);
+  file_put_contents("/tmp/sample-page.html", $html_page);
   @$page->parse($html_page);
   
   // Rebase all absolute page URLs with respect to the document root
@@ -236,6 +238,8 @@ foreach ($pages as $page)
   rebase_urls($nodelist, "src", $rendering, $page);
   $nodelist = $page->dom->getElementsByTagName("link");
   rebase_urls($nodelist, "href", $rendering, $page);
+  $nodelist = $page->dom->getElementsByTagName("script");
+  rebase_urls($nodelist, "src", $rendering, $page);
 }
 
 // Third pass: clean URLs
@@ -252,6 +256,7 @@ if ($fw_params["clean-urls"] == true)
 // Fourth pass: write files
 foreach ($pages as $page)
 {
+  $contents = "";
   $output_filename = $page->getOutputFilename();
   $regenerate = $page->mustRegenerate();
   if ($fw_params["incremental"] == true && $regenerate === Page::$DONT_REGENERATE)
@@ -271,14 +276,32 @@ foreach ($pages as $page)
       spitln(" target file does not exist", 1);
   }
   make_path($output_filename, true);
-  // TODO: this is a hack. For some reason, the DOM Document writes the
-  // xmlns header twice; this removes the HTML validation error.
   $contents = $page->dom->saveHTML();
-  $contents = str_replace("xmlns=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.w3.org/1999/xhtml\"", "xmlns=\"http://www.w3.org/1999/xhtml\"", $contents);
-  
-  // TODO: another hack. DOMDocument puts all JavaScript inside a CDATA
-  // that deactivates it. We manually remove the CDATA from the final page.
-  $contents = preg_replace("/<script ([^>]*?)>[\n\s]*?<!\[CDATA\[(.*?)\]\]>[\n\s]*?<\/script>/ms", "<script $1>$2</script>", $contents);
+  if (!$page->is_html5)
+  {
+    // TODO: this is a hack. For some reason, the DOM Document writes the
+    // xmlns header twice; this removes the HTML validation error.
+    
+    $contents = str_replace("xmlns=\"http://www.w3.org/1999/xhtml\" xmlns=\"http://www.w3.org/1999/xhtml\"", "xmlns=\"http://www.w3.org/1999/xhtml\"", $contents);
+    
+    // TODO: another hack. DOMDocument puts all JavaScript inside a CDATA
+    // that deactivates it. We manually remove the CDATA from the final page.
+    $contents = preg_replace("/<script ([^>]*?)>[\n\s]*?<!\[CDATA\[(.*?)\]\]>[\n\s]*?<\/script>/ms", "<script $1>$2</script>", $contents);
+  }
+  else
+  {
+    // If the page was parsed as HTML5, other hacks are needed
+    // The DOMDocument does not output the DOCTYPE
+    $contents = "<!DOCTYPE HTML>\n".$contents;
+    // html5lib escapes HTML inside <noscript>; we have to unescape it back
+    if (preg_match("/<noscript>(.*)<\\/noscript>/ms", $contents, $matches))
+    {
+      $all = $matches[0];
+      $inside = $matches[1];
+      $inside = str_replace(array("&lt;", "&gt;"), array("<", ">"), $inside);
+      $contents = str_replace($all, "<noscript>$inside</noscript>", $contents);
+    }
+  }
   file_put_contents($output_filename, $contents);
 }
 
