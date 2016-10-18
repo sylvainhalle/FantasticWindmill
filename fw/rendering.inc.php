@@ -1,12 +1,11 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013  Sylvain Hallé
+    Copyright (C) 2013-2016  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
     Author:  Sylvain Hallé
-    Date:    2013-01-23
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,22 +31,22 @@ class Rendering
   
   public function getContentDir()
   {
-    return $this->m_contentDir;
+    return to_slashes($this->m_contentDir);
   }
   
   public function getOutputDir()
   {
-    return $this->m_outputDir;
+    return to_slashes($this->m_outputDir);
   }
   
   public function getStaticDir()
   {
-    return $this->m_staticDir;
+    return to_slashes($this->m_staticDir);
   }
   
   public function getTemplateDir()
   {
-    return $this->m_templateDir;
+    return to_slashes($this->m_templateDir);
   }
   
   public function getYaml()

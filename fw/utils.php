@@ -1,12 +1,11 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013  Sylvain Hallé
+    Copyright (C) 2013-2016  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
     Author:  Sylvain Hallé
-    Date:    2013-01-23
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -115,6 +114,8 @@ function make_path($pathname, $is_filename=false)
  */
 function relative_path($p1, $p2)
 {
+  $p1 = str_replace("\\", "/", $p1);
+  $p2 = str_replace("\\", "/", $p2);
   if ($p1[strlen($p1) - 1] !== "/")
     $p1 .= "/";
   if ($p2[strlen($p2) - 1] !== "/")
@@ -149,6 +150,7 @@ function relative_path($p1, $p2)
 
 function get_filename($s)
 {
+  $s = to_slashes($s);
   if ($pos = strrpos($s, "/"))
   {
     return substr($s, $pos + 1);
@@ -221,6 +223,11 @@ function turn_blockquote_into_abstract(&$page)
       return;
     }
   }
+}
+
+function to_slashes($s)
+{
+  return str_replace("\\", "/", $s);
 }
 
 ?>

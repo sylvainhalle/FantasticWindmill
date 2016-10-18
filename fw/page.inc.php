@@ -1,12 +1,11 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013  Sylvain Hallé
+    Copyright (C) 2013-2016  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
     Author:  Sylvain Hallé
-    Date:    2013-01-26
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -57,12 +56,23 @@ class Page
     return $this->dom->saveHTML();
   }
   
+  /**
+   * Gets the complete URL of the current page
+   */
   public function getUrl($from = "")
+  {
+    $my_filename = get_filename($this->m_outputFilename);
+    return $this->getPath($from).$my_filename;
+  }
+  
+  /**
+   * Gets the folder of the current page (i.e. URL without filename)
+   */
+  public function getPath($from = "")
   {
     $from_nofile = trim_filename($from);
     $my_path = trim_filename($this->m_outputFilename);
-    $my_filename = get_filename($this->m_outputFilename);
-    $relative = relative_path($my_path, $from_nofile).$my_filename;
+    $relative = relative_path($my_path, $from_nofile);
     return $relative;
   }
   
