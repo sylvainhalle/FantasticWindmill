@@ -128,6 +128,7 @@ class Page
   
   function recurseYaml($start_dir, $end_dir, $filename)
   {
+  	global $yaml_parser;
     if ($start_dir[strlen($start_dir) - 1] !== "/")
       $start_dir .= "/";
     if ($end_dir[strlen($end_dir) - 1] !== "/")
@@ -142,12 +143,19 @@ class Page
       if (file_exists($cur_filename))
       {
         $yaml_contents = file_get_contents($cur_filename);
-        if ($parsed_yaml = yaml_parse($yaml_contents))
+        try
         {
-          $out_yaml = array_merge($out_yaml, $parsed_yaml);
-        }
-        else
-          show_error("WARNING: Error parsing YAML in $cur_filename");
+    	  $parsed_yaml = $yaml_parser->parse($yaml_contents);
+    	  if ($parsed_yaml)
+    	  	  $out_yaml = array_merge($out_yaml, $parsed_yaml);
+    	  else
+      		show_error("WARNING: Error parsing YAML in $cur_filename");
+    	}
+    	catch (InvalidArgumentException $e)
+        {
+    	  // an error occurred during parsing
+    	  show_error("WARNING: Error parsing YAML in $cur_filename");
+  	    }
         $this->addIncludedFile($cur_filename);
       }
       $cur_dir .= $dir."/";

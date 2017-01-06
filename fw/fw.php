@@ -22,15 +22,15 @@
 **************************************************************************/
 
 // Version string (used for version tracking)
-define("VERSION_STRING", "1.0.4");
+define("VERSION_STRING", "1.0.5");
 $HELLO_MSG = "Fantastic Windmill v".
   VERSION_STRING." - A static web site generator for PHP programmers\n".
-  "(C) 2013-2016 Sylvain Hallé, Université du Québec à Chicoutimi";
+  "(C) 2013-2017 Sylvain Hallé, Université du Québec à Chicoutimi";
 
 $usage_string = <<<EOD
 
 $HELLO_MSG
-Usage: php fw.php [--help] [options]
+Usage: php fw/fw.php [--help] [options]
 
 Options:
   --clean-urls    Removes html extension in local links
@@ -47,6 +47,7 @@ require_once("fw/site.inc.php");
 require_once("fw/page.inc.php");
 require_once("fw/utils.php");
 require_once("fw/html5lib/Parser.php");
+require_once("fw/yaml-php/sfYamlParser.php");
 
 // Option defaults {{{
 $fw_params = array();
@@ -93,6 +94,7 @@ if (count($argv) > 1)
 // }}}
 
 // Initialization of the instances
+$yaml_parser = new sfYamlParser();
 $rendering = new Rendering();
 $site = new Site();
 $pages = array();
@@ -110,12 +112,12 @@ if (file_exists("config.inc.php"))
 spitln("\n$HELLO_MSG\n", -1);
 
 // Check if YAML module is installed; otherwise deactivate YAML processing
-if (!function_exists("yaml_parse"))
+/*if (!function_exists("yaml_parse"))
 {
   $rendering->setYaml(false);
   show_error("WARNING: the YAML PHP module is not installed. ".
     "Support for YAML is disabled.");
-}
+}*/
 
 // List all pages
 $file_list = scandir_recursive($rendering->getContentDir());
@@ -149,10 +151,19 @@ foreach ($file_list as $file)
   if (file_exists($yaml_filename) && $rendering->getYaml())
   {
     $yaml_contents = file_get_contents($yaml_filename);
-    if ($parsed_yaml = yaml_parse($yaml_contents))
-      $page->mergeYaml($parsed_yaml);
-    else
-      show_error("WARNING: Error parsing YAML in $yaml_filename");
+    try
+    {
+      $parsed_yaml = $yaml_parser->parse($yaml_contents);
+      if ($parsed_yaml)
+    	  $page->mergeYaml($parsed_yaml);
+      else
+        show_error("WARNING: Error parsing YAML in $yaml_filename");
+    }
+    catch (InvalidArgumentException $e)
+    {
+    	// an error occurred during parsing
+    	show_error("WARNING: Error parsing YAML in $yaml_filename");
+  	}
     $page->addIncludedFile($yaml_filename);
   }
   
@@ -161,10 +172,19 @@ foreach ($file_list as $file)
   if (count($matches) > 0)
   {
     $yaml_contents = $matches[0][0];
-    if ($parsed_yaml = yaml_parse($yaml_contents))
-      $page->mergeYaml($parsed_yaml);
-    else
-      show_error("WARNING: Error parsing YAML at the end of $file");
+    try
+    {
+    	$parsed_yaml = $yaml_parser->parse($yaml_contents);
+    	if ($parsed_yaml)
+    	  $page->mergeYaml($parsed_yaml);
+      	else
+      		show_error("WARNING: Error parsing YAML at the end of $file");
+    }
+    catch (InvalidArgumentException $e)
+    {
+    	// an error occurred during parsing
+    	show_error("WARNING: Error parsing YAML at the end of $file");
+  	}
     $contents = substr($contents, 0, $matches[0][1]); // Trim YAML from file before rendering
   }
   
