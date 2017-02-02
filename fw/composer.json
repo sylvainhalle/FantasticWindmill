@@ -1,0 +1,5 @@
+{
+    "require": {
+        "ivopetkov/html5-dom-document-php": "^0.4.4"
+    }
+}

@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013-2016  Sylvain Hallé
+    Copyright (C) 2013-2017  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
@@ -22,7 +22,7 @@
 **************************************************************************/
 
 // Version string (used for version tracking)
-define("VERSION_STRING", "1.0.5");
+define("VERSION_STRING", "1.1");
 $HELLO_MSG = "Fantastic Windmill v".
   VERSION_STRING." - A static web site generator for PHP programmers\n".
   "(C) 2013-2017 Sylvain Hallé, Université du Québec à Chicoutimi";
@@ -41,13 +41,14 @@ EOD;
 /*----------------------*/
 
 // Includes
-require_once("fw/markdown.php");
+require_once("fw/Michelf/MarkdownExtra.inc.php");
+use \Michelf\MarkdownExtra;
 require_once("fw/rendering.inc.php");
 require_once("fw/site.inc.php");
 require_once("fw/page.inc.php");
 require_once("fw/utils.php");
-require_once("fw/html5lib/Parser.php");
 require_once("fw/yaml-php/sfYamlParser.php");
+require("vendor/autoload.php");
 
 // Option defaults {{{
 $fw_params = array();
@@ -190,14 +191,18 @@ foreach ($file_list as $file)
   
   // Get basic metadata from file contents
   if ($ext == "md")
-    $html_contents = Markdown($contents);
-  else {
+  {
+    //$html_contents = Markdown($contents);
+    $html_contents = MarkdownExtra::defaultTransform($contents);
+  }
+  else
+  {
     $tmp_rst_file = "tmp_rst_file.rst";
     file_put_contents($tmp_rst_file, $contents);
     $html_contents = shell_exec("rst2html.py --syntax-highlight=short $tmp_rst_file");
     unlink("tmp_rst_file.rst");
   }
-  @$page->parse($html_contents);
+  $page->parse($html_contents);
   $nodelist = $page->dom->getElementsByTagName("h1");
   $heading1 = $nodelist->item(0);
   if (isset($heading1) && !isset($page->data["title"]))
@@ -247,7 +252,7 @@ foreach ($pages as $page)
   $page_included_files = get_included_files();
   $page_included_files = array_diff($page_included_files, $base_included_files);
   $page->addIncludedFiles($page_included_files);
-  @$page->parse($html_page);
+  $page->parse($html_page);
   
   // Rebase all absolute page URLs with respect to the document root
   $nodelist = $page->dom->getElementsByTagName("a");

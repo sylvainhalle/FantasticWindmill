@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013-2016  Sylvain Hallé
+    Copyright (C) 2013-2017  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
@@ -41,7 +41,8 @@ class Page
     $html = mb_convert_encoding($html, 'HTML-ENTITIES', "UTF-8");
     //if ($this->is_html5 === true)
     {
-      $this->dom = HTML5_Parser::parse($html);
+      $this->dom = new IvoPetkov\HTML5DOMDocument();
+      $this->dom->loadHTML($html);
     }
     /*else
     {
