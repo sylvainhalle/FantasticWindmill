@@ -215,7 +215,7 @@ foreach ($file_list as $file)
   // Process date if not given as a Unix timestamp
   if (isset($page->data["date"]) && !is_numeric($page->data["date"]))
   {
-    $page->data["date"] = strtotime($page->data["date"]);
+    $page->data["date"] = @strtotime($page->data["date"]);
   }
   
   // Target path mirrors relative location in content folder
