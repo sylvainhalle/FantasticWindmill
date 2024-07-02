@@ -11,6 +11,6 @@ should be very, very easy. Cloning and tweaking this repository might be
 all you need.
 
 For more information, please refer to Fantastic Windmill's
-[documentation](http://sylvainhalle.github.com/FantasticWindmill/) --which,
+[documentation](http://sylvainhalle.github.io/FantasticWindmill/) --which,
 by the way, is probably the shortest of all static web site generators.
 Enjoy!
