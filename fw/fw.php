@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013-2017  Sylvain Hallé
+    Copyright (C) 2013-2024  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
@@ -22,10 +22,10 @@
 **************************************************************************/
 
 // Version string (used for version tracking)
-define("VERSION_STRING", "1.1");
+define("VERSION_STRING", "1.2");
 $HELLO_MSG = "Fantastic Windmill v".
   VERSION_STRING." - A static web site generator for PHP programmers\n".
-  "(C) 2013-2017 Sylvain Hallé, Université du Québec à Chicoutimi";
+  "(C) 2013-2024 Sylvain Hallé, Université du Québec à Chicoutimi";
 
 $usage_string = <<<EOD
 
@@ -41,8 +41,7 @@ EOD;
 /*----------------------*/
 
 // Includes
-require_once("fw/Michelf/MarkdownExtra.inc.php");
-use \Michelf\MarkdownExtra;
+use Michelf\MarkdownExtra;
 require_once("fw/rendering.inc.php");
 require_once("fw/site.inc.php");
 require_once("fw/page.inc.php");
@@ -190,18 +189,7 @@ foreach ($file_list as $file)
   }
   
   // Get basic metadata from file contents
-  if ($ext == "md")
-  {
-    //$html_contents = Markdown($contents);
-    $html_contents = MarkdownExtra::defaultTransform($contents);
-  }
-  else
-  {
-    $tmp_rst_file = "tmp_rst_file.rst";
-    file_put_contents($tmp_rst_file, $contents);
-    $html_contents = shell_exec("rst2html.py --syntax-highlight=short $tmp_rst_file");
-    unlink("tmp_rst_file.rst");
-  }
+  $html_contents = MarkdownExtra::defaultTransform($contents);
   $page->parse($html_contents);
   $nodelist = $page->dom->getElementsByTagName("h1");
   $heading1 = $nodelist->item(0);

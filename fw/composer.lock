@@ -1,37 +1,37 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "7da9f91ef092868ad4417f8cb385a162",
-    "content-hash": "482507b046822eb0c4c37f12fa3e5d4c",
+    "content-hash": "ee0fde13326ad2d21097f98956376d09",
     "packages": [
         {
             "name": "ivopetkov/html5-dom-document-php",
-            "version": "v0.4.4",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ivopetkov/html5-dom-document-php.git",
-                "reference": "36807326250a5ee748affd9144290221e8543c53"
+                "reference": "cbbe2d5d03acc020ec78c72fdb20302cb3cdc872"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ivopetkov/html5-dom-document-php/zipball/36807326250a5ee748affd9144290221e8543c53",
-                "reference": "36807326250a5ee748affd9144290221e8543c53",
+                "url": "https://api.github.com/repos/ivopetkov/html5-dom-document-php/zipball/cbbe2d5d03acc020ec78c72fdb20302cb3cdc872",
+                "reference": "cbbe2d5d03acc020ec78c72fdb20302cb3cdc872",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "ext-dom": "*",
+                "php": "7.0.*|7.1.*|7.2.*|7.3.*|7.4.*|8.0.*|8.1.*|8.2.*|8.3.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8"
+                "ivopetkov/docs-generator": "1.*"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "IvoPetkov\\": "src/"
-                }
+                "files": [
+                    "autoload.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -45,7 +45,67 @@
                 }
             ],
             "description": "HTML5 DOMDocument PHP library (extends DOMDocument)",
-            "time": "2017-01-31 12:52:04"
+            "support": {
+                "issues": "https://github.com/ivopetkov/html5-dom-document-php/issues",
+                "source": "https://github.com/ivopetkov/html5-dom-document-php/tree/v2.7.0"
+            },
+            "time": "2023-11-24T17:25:06+00:00"
+        },
+        {
+            "name": "michelf/php-markdown",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/michelf/php-markdown.git",
+                "reference": "eb176f173fbac58a045aff78e55f833264b34e71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/eb176f173fbac58a045aff78e55f833264b34e71",
+                "reference": "eb176f173fbac58a045aff78e55f833264b34e71",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpstan/phpstan": ">=1.0",
+                "phpstan/phpstan-phpunit": ">=1.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Michelf\\": "Michelf/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Michel Fortin",
+                    "email": "michel.fortin@michelf.ca",
+                    "homepage": "https://michelf.ca/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "John Gruber",
+                    "homepage": "https://daringfireball.net/"
+                }
+            ],
+            "description": "PHP Markdown",
+            "homepage": "https://michelf.ca/projects/php-markdown/",
+            "keywords": [
+                "markdown"
+            ],
+            "support": {
+                "issues": "https://github.com/michelf/php-markdown/issues",
+                "source": "https://github.com/michelf/php-markdown/tree/2.0.0"
+            },
+            "time": "2022-09-26T12:21:08+00:00"
         }
     ],
     "packages-dev": [],
@@ -55,5 +115,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }

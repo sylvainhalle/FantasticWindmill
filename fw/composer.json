@@ -1,5 +1,6 @@
 {
-    "require": {
-        "ivopetkov/html5-dom-document-php": "^0.4.4"
-    }
+	"require" : {
+		"ivopetkov/html5-dom-document-php": "2.*",
+		"michelf/php-markdown": "2.*"
+	}
 }
