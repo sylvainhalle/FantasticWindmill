@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013-2016  Sylvain Hallé
+    Copyright (C) 2013-2025  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
@@ -80,8 +80,11 @@ function scandir_recursive($dir)
   return $out;
 }
 
-/*Create  Directory Tree if Not Exists
-If you are passing a path with a filename on the end, pass true as the second parameter to snip it off */
+/**
+ * Creates a directory tree if it does not exist. If you are passing a path with
+ * a filename on the end, pass true as the second parameter to snip it off.
+ * @param $pathname The path to create
+ */
 function make_path($pathname, $is_filename=false)
 {
     if($is_filename){
@@ -148,6 +151,11 @@ function relative_path($p1, $p2)
   return $out_path;
 }
 
+/**
+ * Extracts the filename from a path.
+ * @param $s The path
+ * @return The filename
+ */
 function get_filename($s)
 {
   $s = to_slashes($s);
@@ -159,6 +167,11 @@ function get_filename($s)
     return $s;
 }
 
+/**
+ * Trims the filename from a path.
+ * @param $s The path
+ * @return The path without the filename
+ */
 function trim_filename($s)
 {
   return substr($s, 0, strlen($s) - strlen(get_filename($s)) - 1);
@@ -207,6 +220,11 @@ function clean_urls($nodelist, $attribute)
   }
 }
 
+/**
+ * Finds the first blockquote element in the HTML contents of a page, and
+ * uses it to give a value to the abstract attribute of the page.
+ * @param $page The page
+ */
 function turn_blockquote_into_abstract(&$page)
 {
   $dom = $page->dom;
@@ -225,9 +243,74 @@ function turn_blockquote_into_abstract(&$page)
   }
 }
 
+/**
+ * Replaces backslashes to slashes in a string.
+ * @param $s The string
+ * @return The replaced string
+ */
 function to_slashes($s)
 {
   return str_replace("\\", "/", $s);
 }
 
+/**
+ * Finds the page instance with a given slug.
+ * @param $pages The set of pages in the site
+ * @param $slug The slug to look for
+ * @param $lang Optional. If non-empty, will find the page instance with
+ *   specified language
+ * @return The page with given slug. If multiple pages exist (for example in
+ *   different languages, and $lang is not specified, the first such page will
+ *   be returned. A null value is returned if no page matches the criteria.
+ */
+function find_page_with_slug($pages, $slug, $lang=null)
+{
+  foreach ($pages as $page)
+  {
+  	  if ($page->data["slug"] === $slug)
+  	  {
+  	  	  if ($lang === null || $page->data["lang"] === $lang)
+  	  	  {
+  	  	  	  return $page;
+  	  	  }
+  	  }
+  }
+  return null;
+}
+
+/**
+ * In a list of nodes, replaces all references to slugs with actual file paths.
+ * @param $nodelist The list of DOM nodes
+ * @param $pages The set of pages in the site
+ * @PARAM $current The current page in which the modification is made
+ */
+function replace_slugs($nodelist, $pages, $rendering, $current)
+{
+  for ($i = 0; $i < $nodelist->length; $i++)
+  {
+    $element = $nodelist->item($i);
+    if (!$element->hasAttributes())
+      continue;
+    $href = $element->attributes->getNamedItem("href");
+    if ($href === null)
+      continue;
+    $url = trim($href->nodeValue);
+    if (substr($url, 0, 2) !== "#:") // slug id
+      continue;
+    $slug = substr($url, 2, strlen($url) - 4);
+    $page = find_page_with_slug($pages, $slug, isset($current->data["lang"]) ? $current->data["lang"] : null);
+    if ($page !== null)
+    {
+      $relative_to_root = relative_path($rendering->getOutputDir(), trim_filename($page->getOutputFilename()));
+      $target_url = $relative_to_root.$page->getUrl();
+      $element->setAttribute("href", $target_url);
+    }
+    else
+    {
+    	// Remove URL to avoid issues
+    	$element->removeAttribute("href");
+    	show_error("Page with slug ".$slug." not found");
+    }
+  }
+}
 ?>

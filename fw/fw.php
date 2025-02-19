@@ -1,7 +1,7 @@
 <?php
 /**************************************************************************
     Fantastic Windmill
-    Copyright (C) 2013-2024  Sylvain Hallé
+    Copyright (C) 2013-2025  Sylvain Hallé
     
     A simple static web site generator for PHP programmers.
     
@@ -22,10 +22,10 @@
 **************************************************************************/
 
 // Version string (used for version tracking)
-define("VERSION_STRING", "1.2");
+define("VERSION_STRING", "1.3");
 $HELLO_MSG = "Fantastic Windmill v".
   VERSION_STRING." - A static web site generator for PHP programmers\n".
-  "(C) 2013-2024 Sylvain Hallé, Université du Québec à Chicoutimi";
+  "(C) 2013-2025 Sylvain Hallé, Université du Québec à Chicoutimi";
 
 $usage_string = <<<EOD
 
@@ -242,6 +242,10 @@ foreach ($pages as $page)
   $page->addIncludedFiles($page_included_files);
   $page->parse($html_page);
   
+  // Replace slug IDs in URLs with actual file paths
+  $nodelist = $page->dom->getElementsByTagName("a");
+  replace_slugs($nodelist, $pages, $rendering, $page);
+  
   // Rebase all absolute page URLs with respect to the document root
   $nodelist = $page->dom->getElementsByTagName("a");
   rebase_urls($nodelist, "href", $rendering, $page);
@@ -304,8 +308,6 @@ foreach ($pages as $page)
   else
   {
     // If the page was parsed as HTML5, other hacks are needed
-    // The DOMDocument does not output the DOCTYPE
-    $contents = "<!DOCTYPE HTML>\n".$contents;
     // html5lib escapes HTML inside <noscript>; we have to unescape it back
     if (preg_match("/<noscript>(.*)<\\/noscript>/ms", $contents, $matches))
     {
