@@ -67,6 +67,7 @@ help:
 	@echo '   make publish                     generate using production settings '
 	@echo '   make mirror                      mirror all files to output dir     '
 	@echo '   make clean                       remove the generated files         '
+	@echo '   make all                         clean, html, mirror                '
 	@echo '   ssh_upload                       upload the web site via SSH        '
 	@echo '   rsync_upload                     upload the web site via rsync+ssh  '
 	@echo '   dropbox_upload                   upload the web site via Dropbox    '
@@ -86,6 +87,8 @@ mirror:
 
 clean:
 	find $(OUTPUTDIR) -mindepth 1 -delete
+
+all: clean html mirror
 
 publish: template_remote
 	$(FW) $(FWOPTS)
