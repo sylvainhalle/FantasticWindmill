@@ -121,7 +121,7 @@ function relative_path($p1, $p2)
   $p2 = str_replace("\\", "/", $p2);
   if ($p1[strlen($p1) - 1] !== "/")
     $p1 .= "/";
-  if ($p2[strlen($p2) - 1] !== "/")
+  if (empty($p2) || $p2[strlen($p2) - 1] !== "/")
     $p2 .= "/";
   for ($i = 0; $i < min(strlen($p1), strlen($p2)); $i++)
   {
@@ -254,7 +254,8 @@ function to_slashes($s)
 }
 
 /**
- * Finds the page instance with a given slug.
+ * Finds the page instance with a given slug. The slug is a colon-separated
+ * list of strings, of the form <tt>slug:lang</tt> or simply <tt>slug</tt>.
  * @param $pages The set of pages in the site
  * @param $slug The slug to look for
  * @param $lang Optional. If non-empty, will find the page instance with
@@ -265,9 +266,16 @@ function to_slashes($s)
  */
 function find_page_with_slug($pages, $slug, $lang=null)
 {
+  $parts = explode(":", $slug);
+  $slug_id = $parts[0];
+  if (count($parts) > 1)
+  {
+  	  $lang = trim($parts[1]);
+  	  echo "Looking for $slug_id, $lang\n";
+  }
   foreach ($pages as $page)
   {
-  	  if ($page->data["slug"] === $slug)
+  	  if ($page->data["slug"] === $slug_id)
   	  {
   	  	  if ($lang === null || $page->data["lang"] === $lang)
   	  	  {

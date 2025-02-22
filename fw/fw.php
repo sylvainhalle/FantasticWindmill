@@ -52,7 +52,7 @@ require("vendor/autoload.php");
 // Option defaults {{{
 $fw_params = array();
 $fw_params["verbosity"] = 1;
-$fw_params["clean-urls"] = 0;
+$fw_params["clean-urls"] = false;
 $fw_params["incremental"] = false;
 // }}}
 
@@ -74,6 +74,7 @@ if (count($argv) > 1)
     }
     elseif ($value === "--clean-urls")
     {
+    	
       $fw_params["clean-urls"] = true;
     }
     elseif ($value === "--incremental")
